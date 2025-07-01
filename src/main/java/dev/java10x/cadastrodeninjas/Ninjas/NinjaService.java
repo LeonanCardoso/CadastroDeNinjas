@@ -11,7 +11,12 @@ public class NinjaService {
 
     @Autowired
     private NinjaRepository ninjaRepository;
+    private NinjaMapper ninjaMapper = new NinjaMapper();
 
+    public NinjaService(NinjaRepository ninjaRepository, NinjaMapper ninjaMapper) {
+        this.ninjaRepository = ninjaRepository;
+        this.ninjaMapper = ninjaMapper;
+    }
 
     public List<NinjaModel> listarNinjas(){
         return ninjaRepository.findAll();
@@ -22,8 +27,10 @@ public class NinjaService {
         return ninjaPorId.orElse(null);
     }
 
-    public NinjaModel criarNinja(NinjaModel ninja) {
-        return ninjaRepository.save(ninja);
+    public NinjaDTO criarNinja(NinjaDTO ninjaDTO) {
+        NinjaModel ninja = new ninjaMapper.map(ninjaDTO);
+        ninjaRepository.save(ninja);
+        return ninjaMapper.map(ninja);
     }
 
     public void deletarNinjaPorId(Long id){
